@@ -7,6 +7,7 @@ import (
 	"syscall"
 
 	"github.com/Masum-Osman/lex-scope/pkg/config"
+	"github.com/Masum-Osman/lex-scope/pkg/logger"
 	"go.uber.org/fx"
 )
 
