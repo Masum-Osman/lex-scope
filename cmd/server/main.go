@@ -6,8 +6,8 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/Masum-Osman/lex-scope/pkg/config"
 	"go.uber.org/fx"
-	"gorm.io/gorm/logger"
 )
 
 func main() {
