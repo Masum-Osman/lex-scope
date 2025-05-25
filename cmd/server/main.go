@@ -15,7 +15,7 @@ func main() {
 	app := fx.New(
 		config.Module,
 		logger.Module,
-		di.Module,
+		// di.Module,
 		fx.Invoke(run),
 	)
 
