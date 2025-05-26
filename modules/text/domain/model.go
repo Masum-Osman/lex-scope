@@ -13,3 +13,7 @@ type AnalysisResult struct {
 	ParagraphCount int      `json:"paragraph_count"`
 	LongestWords   []string `json:"longest_words"`
 }
+
+type TextRequest struct {
+	Content string `json:"content"`
+}

@@ -6,6 +6,7 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/Masum-Osman/lex-scope/modules/text/di"
 	"github.com/Masum-Osman/lex-scope/pkg/config"
 	"github.com/Masum-Osman/lex-scope/pkg/logger"
 	"go.uber.org/fx"
@@ -15,7 +16,7 @@ func main() {
 	app := fx.New(
 		config.Module,
 		logger.Module,
-		// di.Module,
+		di.Module,
 		fx.Invoke(run),
 	)
 
