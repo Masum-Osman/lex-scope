@@ -7,11 +7,12 @@ import (
 )
 
 type Text struct {
-	ID        primitive.ObjectID `json:"id" bson:"_id,omitempty"`
-	Content   string             `json:"content" bson:"content"`
-	UserID    string             `json:"user_id" bson:"user_id"`
-	CreatedAt time.Time          `json:"created_at" bson:"created_at"`
-	UpdatedAt time.Time          `json:"updated_at" bson:"updated_at"`
+	ID             primitive.ObjectID `json:"id" bson:"_id,omitempty"`
+	Content        string             `json:"content" bson:"content"`
+	UserID         string             `json:"user_id,omitempty" bson:"user_id,omitempty"`
+	AnalysisResult AnalysisResult     `json:"analysis_result" bson:"analysis_result"`
+	CreatedAt      time.Time          `json:"created_at" bson:"created_at"`
+	UpdatedAt      time.Time          `json:"updated_at" bson:"updated_at"`
 }
 
 type AnalysisResult struct {

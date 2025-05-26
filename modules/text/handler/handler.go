@@ -39,8 +39,12 @@ func (h *TextHandler) CreateText(c *gin.Context) {
 		return
 	}
 
-	result := h.textService.Analyze(req.Content)
-	c.JSON(http.StatusOK, result)
+	id, err := h.textService.Create(c, req.Content)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "create failed"})
+		return
+	}
+	c.JSON(http.StatusCreated, gin.H{"id": id})
 }
 
 func (h *TextHandler) GetWordCount(c *gin.Context) {

@@ -4,22 +4,28 @@ import (
 	"context"
 	"regexp"
 	"strings"
+	"time"
 
 	"github.com/Masum-Osman/lex-scope/modules/text/domain"
+	"github.com/Masum-Osman/lex-scope/modules/text/repository"
 )
 
 type TextService interface {
 	Analyze(content string) domain.AnalysisResult
+	Create(ctx context.Context, content string) (string, error)
+	Get(ctx context.Context, id string) (domain.Text, error)
+	Update(ctx context.Context, id string, content string) error
+	Delete(ctx context.Context, id string) error
 }
 
-func (t TextService) Create(ctx context.Context, s string) (any, any) {
-	panic("unimplemented")
+type textService struct {
+	repo repository.TextRepository
 }
 
-type textService struct{}
-
-func NewTextService() TextService {
-	return &textService{}
+func NewTextService(repo repository.TextRepository) TextService {
+	return &textService{
+		repo: repo,
+	}
 }
 
 func (s *textService) Analyze(content string) domain.AnalysisResult {
@@ -79,8 +85,9 @@ func (s *textService) Create(ctx context.Context, content string) (string, error
 	text := domain.Text{
 		Content:        content,
 		AnalysisResult: result,
+		CreatedAt:      time.Now(),
+		UpdatedAt:      time.Now(),
 	}
-
 	return s.repo.Save(ctx, text)
 }
 
@@ -93,6 +100,7 @@ func (s *textService) Update(ctx context.Context, id string, content string) err
 	updated := domain.Text{
 		Content:        content,
 		AnalysisResult: result,
+		UpdatedAt:      time.Now(),
 	}
 	return s.repo.Update(ctx, id, updated)
 }

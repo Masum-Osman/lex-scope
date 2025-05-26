@@ -7,6 +7,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/Masum-Osman/lex-scope/modules/text/repository/mockrepo"
 	"github.com/Masum-Osman/lex-scope/modules/text/usecase"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
@@ -22,7 +23,8 @@ func setupRouter(service usecase.TextService) *gin.Engine {
 }
 
 func TestCreateText(t *testing.T) {
-	service := usecase.NewTextService()
+	mockRepo := &mockrepo.MockTextRepository{}
+	service := usecase.NewTextService(mockRepo)
 	router := setupRouter(service)
 
 	payload := map[string]string{
@@ -42,10 +44,13 @@ func TestCreateText(t *testing.T) {
 	json.Unmarshal(w.Body.Bytes(), &response)
 
 	assert.EqualValues(t, 9, int(response["word_count"].(float64)))
+	assert.NotEmpty(t, response["id"])
+
 }
 
 func TestGetWordCount(t *testing.T) {
-	service := usecase.NewTextService()
+	mockRepo := &mockrepo.MockTextRepository{}
+	service := usecase.NewTextService(mockRepo)
 	router := setupRouter(service)
 
 	req, _ := http.NewRequest("GET", "/api/v1/texts/dummy-id/word-count", nil)

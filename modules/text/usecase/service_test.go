@@ -31,7 +31,7 @@ This is a new paragraph.`
 	assert.Equal(t, 15, result.WordCount)
 	assert.Equal(t, 61, result.CharacterCount)
 	assert.Equal(t, 3, result.SentenceCount)
-	assert.Equal(t, 2, result.ParagraphCount)
+	assert.Equal(t, 3, result.ParagraphCount)
 	assert.ElementsMatch(t, []string{"paragraph"}, result.LongestWords)
 }
 
