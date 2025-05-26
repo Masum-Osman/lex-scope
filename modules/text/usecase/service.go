@@ -1,6 +1,7 @@
 package usecase
 
 import (
+	"context"
 	"regexp"
 	"strings"
 
@@ -9,6 +10,10 @@ import (
 
 type TextService interface {
 	Analyze(content string) domain.AnalysisResult
+}
+
+func (t TextService) Create(ctx context.Context, s string) (any, any) {
+	panic("unimplemented")
 }
 
 type textService struct{}
@@ -67,4 +72,31 @@ func findLongestWords(words []string) []string {
 	}
 
 	return longest
+}
+
+func (s *textService) Create(ctx context.Context, content string) (string, error) {
+	result := s.Analyze(content)
+	text := domain.Text{
+		Content:        content,
+		AnalysisResult: result,
+	}
+
+	return s.repo.Save(ctx, text)
+}
+
+func (s *textService) Get(ctx context.Context, id string) (domain.Text, error) {
+	return s.repo.GetByID(ctx, id)
+}
+
+func (s *textService) Update(ctx context.Context, id string, content string) error {
+	result := s.Analyze(content)
+	updated := domain.Text{
+		Content:        content,
+		AnalysisResult: result,
+	}
+	return s.repo.Update(ctx, id, updated)
+}
+
+func (s *textService) Delete(ctx context.Context, id string) error {
+	return s.repo.Delete(ctx, id)
 }

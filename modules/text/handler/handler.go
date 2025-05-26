@@ -26,6 +26,10 @@ func (h *TextHandler) RegisterRoutes(rg *gin.RouterGroup) {
 	rg.GET("/texts/:id/sentence-count", h.GetSentenceCount)
 	rg.GET("/texts/:id/paragraph-count", h.GetParagraphCount)
 	rg.GET("/texts/:id/longest-words", h.GetLongestWords)
+
+	rg.GET("/texts/:id", h.GetText)
+	rg.PUT("/texts/:id", h.UpdateText)
+	rg.DELETE("/texts/:id", h.DeleteText)
 }
 
 func (h *TextHandler) CreateText(c *gin.Context) {
@@ -75,4 +79,39 @@ func (h *TextHandler) analyzeAndRespond(c *gin.Context, build func(result domain
 	result := h.textService.Analyze(text)
 
 	c.JSON(http.StatusOK, build(result))
+}
+
+func (h *TextHandler) GetText(c *gin.Context) {
+	id := c.Param("id")
+	text, err := h.textService.Get(c, id)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "not found"})
+		return
+	}
+	c.JSON(http.StatusOK, text)
+}
+
+func (h *TextHandler) UpdateText(c *gin.Context) {
+	id := c.Param("id")
+	var req domain.TextRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid input"})
+		return
+	}
+	err := h.textService.Update(c, id, req.Content)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "update failed"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "updated"})
+}
+
+func (h *TextHandler) DeleteText(c *gin.Context) {
+	id := c.Param("id")
+	err := h.textService.Delete(c, id)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "delete failed"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "deleted"})
 }
