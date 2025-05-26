@@ -1,9 +1,17 @@
 package domain
 
+import (
+	"time"
+
+	"go.mongodb.org/mongo-driver/bson/primitive"
+)
+
 type Text struct {
-	ID      string `json:"id" bson:"_id,omitempty"`
-	Content string `json:"content" bson:"content"`
-	UserID  string `json:"user_id" bson:"user_id"`
+	ID        primitive.ObjectID `json:"id" bson:"_id,omitempty"`
+	Content   string             `json:"content" bson:"content"`
+	UserID    string             `json:"user_id" bson:"user_id"`
+	CreatedAt time.Time          `json:"created_at" bson:"created_at"`
+	UpdatedAt time.Time          `json:"updated_at" bson:"updated_at"`
 }
 
 type AnalysisResult struct {
