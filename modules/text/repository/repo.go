@@ -11,9 +11,9 @@ import (
 )
 
 type TextRepository interface {
-	Save(ctx context.Context, text domain.Text) (string, error)
-	GetByID(ctx context.Context, id string) (domain.Text, error)
-	Update(ctx context.Context, id string, text domain.Text) error
+	Save(ctx context.Context, text *domain.Text) (string, error)
+	GetByID(ctx context.Context, id string) (*domain.Text, error)
+	Update(ctx context.Context, id string, text *domain.Text) error
 	Delete(ctx context.Context, id string) error
 	List(ctx context.Context) ([]domain.Text, error)
 }
@@ -38,7 +38,7 @@ func (r *mongoTextRepository) Save(ctx context.Context, text *domain.Text) (stri
 }
 */
 
-func (r *mongoTextRepository) Save(ctx context.Context, text domain.Text) (string, error) {
+func (r *mongoTextRepository) Save(ctx context.Context, text *domain.Text) (string, error) {
 	text.ID = primitive.NewObjectID()
 	text.CreatedAt = time.Now()
 	text.UpdatedAt = time.Now()
@@ -46,11 +46,11 @@ func (r *mongoTextRepository) Save(ctx context.Context, text domain.Text) (strin
 	return text.ID.Hex(), err
 }
 
-func (r *mongoTextRepository) GetByID(ctx context.Context, id string) (domain.Text, error) {
+func (r *mongoTextRepository) GetByID(ctx context.Context, id string) (*domain.Text, error) {
 	objID, _ := primitive.ObjectIDFromHex(id)
 	var t domain.Text
 	err := r.collection.FindOne(ctx, bson.M{"_id": objID}).Decode(&t)
-	return t, err
+	return &t, err
 }
 
 /*
@@ -63,7 +63,7 @@ func (r *mongoTextRepository) Update(ctx context.Context, text *domain.Text) err
 }
 */
 
-func (r *mongoTextRepository) Update(ctx context.Context, id string, updated domain.Text) error {
+func (r *mongoTextRepository) Update(ctx context.Context, id string, updated *domain.Text) error {
 	objID, _ := primitive.ObjectIDFromHex(id)
 	updated.UpdatedAt = time.Now()
 	_, err := r.collection.ReplaceOne(ctx, bson.M{"_id": objID}, updated)

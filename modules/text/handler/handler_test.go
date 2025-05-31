@@ -7,9 +7,10 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/Masum-Osman/lex-scope/modules/text/repository/mockrepo"
+	"github.com/Masum-Osman/lex-scope/modules/text/repository"
 	"github.com/Masum-Osman/lex-scope/modules/text/usecase"
 	"github.com/gin-gonic/gin"
+	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -23,8 +24,12 @@ func setupRouter(service usecase.TextService) *gin.Engine {
 }
 
 func TestCreateText(t *testing.T) {
-	mockRepo := &mockrepo.MockTextRepository{}
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockRepo := repository.NewMockTextRepository(ctrl)
 	service := usecase.NewTextService(mockRepo)
+
 	router := setupRouter(service)
 
 	payload := map[string]string{
